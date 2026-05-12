@@ -1,0 +1,25 @@
+services:
+  # Ollama service for AI model hosting
+  ollama:
+    image: ollama/ollama:latest
+    container_name: workshop-ollama
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    restart: unless-stopped
+
+  # Qdrant service for vector storage
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  qdrant_storage:

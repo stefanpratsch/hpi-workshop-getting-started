@@ -59,6 +59,27 @@
   background: #e9ecef;
 }
 
+.rag-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #495057;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rag-toggle input {
+  margin: 0;
+}
+
+.rag-toggle:has(input:disabled) {
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -104,6 +125,14 @@
 .message.assistant .message-content {
   background: #e9ecef;
   color: #495057;
+}
+
+.message-sources {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #ced4da;
+  color: #6c757d;
+  font-size: 0.8rem;
 }
 
 .typing-indicator {
@@ -236,5 +265,9 @@
   
   .input-container {
     padding: 15px;
+  }
+
+  .connection-status {
+    flex-wrap: wrap;
   }
 }

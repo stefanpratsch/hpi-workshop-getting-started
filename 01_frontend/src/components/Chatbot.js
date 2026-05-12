@@ -12,6 +12,7 @@ const Chatbot = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [useRag, setUseRag] = useState(false);
   const messagesEndRef = useRef(null);
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
@@ -50,14 +51,16 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${backendUrl}/chat`, {
+      const endpoint = useRag ? '/chat/rag' : '/chat';
+      const response = await axios.post(`${backendUrl}${endpoint}`, {
         message: userMessage.content,
         conversation_history: messages
       });
 
       const assistantMessage = {
         role: 'assistant',
-        content: response.data.response
+        content: response.data.response,
+        sources: response.data.sources || []
       };
 
       setMessages([...newMessages, assistantMessage]);
@@ -101,6 +104,15 @@ const Chatbot = () => {
           <button onClick={checkConnection} className="refresh-btn">
             🔄
           </button>
+          <label className="rag-toggle">
+            <input
+              type="checkbox"
+              checked={useRag}
+              onChange={(e) => setUseRag(e.target.checked)}
+              disabled={isLoading}
+            />
+            Use RAG
+          </label>
           <button onClick={clearChat} className="clear-btn">
             🗑️ Clear
           </button>
@@ -115,6 +127,11 @@ const Chatbot = () => {
             </div>
             <div className="message-content">
               {message.content}
+              {message.sources?.length > 0 && (
+                <div className="message-sources">
+                  Sources: {[...new Set(message.sources.map((source) => source.filename))].join(', ')}
+                </div>
+              )}
             </div>
           </div>
         ))}
